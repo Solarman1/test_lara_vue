@@ -58,6 +58,8 @@
         ></b-form-select>
         
       </b-form-group>
+   
+       <b-alert show variant="danger">{{form}}</b-alert>
        <b-alert show variant="success">{{info}}</b-alert>
       
 

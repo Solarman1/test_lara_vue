@@ -16,20 +16,18 @@ class OrderRegisterService implements OrderRegisterServiceInterface
         //$data = json_decode($request->getContent());
         $check = $clientModel::select('id')->where('phone', $request->phone)
                 ->first();
-             
-                
-        if(empty($check))
+         
+        if(!$check)
         {
             $clientId = $clientModel::create([
                 'name'  =>  $request->name,
                 'phone' =>  $request->phone 
             ]);
    
-
             try{
-                $this->saveOrder($orderModel, $request, $clientId->id);
+                $this->saveOrder($orderModel, $request, $clientId);
                 DB::commit();
-                return response('all ok', 200);
+                return true;
             }
             catch(Exception $e)
             {
@@ -42,7 +40,7 @@ class OrderRegisterService implements OrderRegisterServiceInterface
             try{
                 $this->saveOrder($orderModel, $request, $check);
                 DB::commit();
-                return response('all ok', 200);
+                return true;
             }
             catch(Exception $e)
             {
@@ -50,6 +48,7 @@ class OrderRegisterService implements OrderRegisterServiceInterface
                 return $e->getMessage();
             }
         }
+        return false;
     }
 
     private function saveOrder($orderModel, $data, $clientId)
